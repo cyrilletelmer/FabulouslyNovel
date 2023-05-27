@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">FabulouslyNovel</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="events_teaser">Hottest events in your area</string>
+    <string name="error_no_internet">Connection not available</string>
+    <string name="error_internal">An internal error happened</string>
+    <string name="error_general">Something wrong happened, please retry</string>
+    <string name="error_timeout">Service could not answer in time, please check your internet connection and retry</string>
+</resources>
