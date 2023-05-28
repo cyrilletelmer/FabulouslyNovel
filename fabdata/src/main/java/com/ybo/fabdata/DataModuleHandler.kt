@@ -9,15 +9,21 @@ import com.ybo.fabdata.model.EntityEvent
 import com.ybo.fabdata.model.EntityEventFactory
 import com.ybo.fabdata.usecases.GettingHottestEventsToCome
 
+/** Entry point for the DATA part of the app. Client of this module use this object to obtain the data they are interested in*/
 class DataModuleHandler
     {
 
     companion object
         {
+        /** this object deals with transforming network exceptions into a [DataError.Error] objects*/
         var exceptionPolicy : ExceptionPolicyForAPI = DefaultExceptionPolicyForAPI()
+        /** this object deals with checking internet before making network calls */
         var connectionStrengthAware : ConnectionStrengthAware = StubConnectionStrengthAware()
+        /** this object is the abstraction of the SeatGeek API */
         var elementaryApiCalls: ElementaryApiCalls = StubElementaryAPICalls()
+        /** what will build the event entities*/
         var eventFactory :EntityEvent.Factory = EntityEventFactory()
+        /** object that will be used to write logs in this module */
         var logger : LogStrategy = LogStrategy()
         }
 
@@ -40,8 +46,6 @@ class DataModuleHandler
         }
 
 
-
-
     /** result of an api call, even if failed */
     open class DataResult<T>(val error:DataError.Error, val data : T? )
         {
@@ -53,7 +57,8 @@ class DataModuleHandler
 
 
 
-        // STUBS:
+    //==============================================================================================
+    // STUBS:
 
     internal class DefaultExceptionPolicyForAPI: ExceptionPolicyForAPI
         {
