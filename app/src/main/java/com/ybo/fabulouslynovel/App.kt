@@ -7,8 +7,9 @@ class App : Application()
     {
     companion object
         {
-        lateinit var context : Context
+        lateinit var context : Context //it's ok
         }
+
     override fun onCreate()
         {
         super.onCreate()

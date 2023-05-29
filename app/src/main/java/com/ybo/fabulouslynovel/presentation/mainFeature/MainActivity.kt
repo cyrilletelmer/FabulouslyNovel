@@ -47,6 +47,11 @@ class MainActivity : AppCompatActivity() {
         mViewModelOfThisFeature.listOfSmallEventsChannel.observe(this, this::onDisplayableListOfSmallEventsIncoming)
         mViewModelOfThisFeature.bigEventChannel.observe(this, this::onDisplayableHighlightedEventIncoming)
         mViewModelOfThisFeature.mPoppingErrorSignalChannel.observe(this,this::onErrorIncoming)
+        //
+        findViewById<View>(R.id.searchIcon).setOnClickListener {
+            mViewModelOfThisFeature.onClickOnSearchButton(findViewById<TextView>(R.id.searchedPatternTV).text!!.toString())
+            }
+
         }
 
     /** called when user clicked on a small icon for events */

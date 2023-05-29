@@ -37,7 +37,7 @@ class ApiSeat
         : ApiResult<List<ApiModelEvent>>
     {
         return checkInternetAndDoTheRequest {
-            elementaryApiCalls.eventsBySearchedPatternOrThrow(inPattern,"")
+            elementaryApiCalls.eventsBySearchedPatternOrThrow(inPattern,sortingRuleToSortingArg(inSortingRule))
         }
     }
 

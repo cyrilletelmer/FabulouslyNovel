@@ -22,24 +22,34 @@ class RetrofitBasedElementaryApiCalls : ElementaryApiCalls
         throw Exception("pb")
         }
 
-    override suspend fun eventsOrThrow(
+    override suspend fun eventsOrThrow
+        (
         inPageSize:Int?,
         inCategory: String?,
         inSortingRule: String?,
         inPage:Int,
         ): List<ApiModelEvent>
-            {
-
-            return ApiClientRetrofit.apiService.events(inPage,inCategory,inSortingRule, ApiClientRetrofit.CLIENT_ID).also {
-                DataModuleHandler.logger.log("APIRETROFIT","requesting events result is ${it.errorBody()?.string()} body ${it.body()}")
-            }.body()?.events ?: throw Exception("hum")
+        {
+        return ApiClientRetrofit.apiService.events(inPage,inCategory,inSortingRule,null, ApiClientRetrofit.CLIENT_ID).let {
+            DataModuleHandler.logger.log("APIRETROFIT","requesting events result is ${it.errorBody()?.string()} body ${it.body()}")
+            if(it.isSuccessful)
+                it.body()!!.events
+            else
+                throw Exception(it.errorBody()!!.string())
             }
+        }
 
-        override suspend fun eventsBySearchedPatternOrThrow(
-            inPattern: String,
-            inSortingRule: String?
-        ): List<ApiModelEvent> {
-            TODO("Not yet implemented")
+    override suspend fun eventsBySearchedPatternOrThrow
+        (
+        inPattern: String,
+        inSortingRule: String?
+        ): List<ApiModelEvent>
+        {
+        val vResponseFromRetrofit = ApiClientRetrofit.apiService.events(null,null,inSortingRule,inPattern,ApiClientRetrofit.CLIENT_ID)
+        if(vResponseFromRetrofit.isSuccessful)
+            return vResponseFromRetrofit.body()!!.events
+        else
+            throw Exception(vResponseFromRetrofit.errorBody()!!.string())
         }
 
     interface Retrofit
@@ -50,11 +60,11 @@ class RetrofitBasedElementaryApiCalls : ElementaryApiCalls
         @GET("/events")
         suspend fun events
             (
-            @Query("page")  inPage:Int,
+            @Query("page")  inPage:Int?,
             @Query("type")  inCategory:String?,
             @Query("sort")  inSortingArg:String?,
+            @Query("q") inSearched: String?,
             @Query("client_id") inClientId:String
-
             ) : Response<EventsContainer>
         }
 

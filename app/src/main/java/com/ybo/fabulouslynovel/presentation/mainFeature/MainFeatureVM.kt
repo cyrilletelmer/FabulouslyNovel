@@ -32,7 +32,7 @@ class MainFeatureVM : ViewModel()
     private var mPolicyToDisplayErrors : PolicyErrorsToDisplayable = PolicyErrorsToDisplayable()
 
     //context
-    private var  mHottestEvents: List<EntityEvent>? = null
+    private var  mListOfEventsOfInterest: List<EntityEvent>? = null
 
 
     /** called when screen is getting visible */
@@ -42,12 +42,12 @@ class MainFeatureVM : ViewModel()
         getWaiterDisplayChannelAsMutable().value= true//display waiting animation
         viewModelScope.launch {
             //in background, let's fetch the hottest events in order to display them
-            val vResult = DataModuleAccess.getMostPopularEvents().execute()
+            val vResult = DataModuleAccess.getUsecaseForGettingHottestEvents().execute()
             getWaiterDisplayChannelAsMutable().value= false //hide waiting animation
             if(vResult.isSuccessful())
                 {
                 // we successfully fetched events, we will display them in a small setting, and the most important in a big one
-                mHottestEvents = vResult.data?.also {
+                mListOfEventsOfInterest = vResult.data?.also {
                     // post the list of events in disp. form
                     getListOfSmallDisplayableChannelAsMutable().value =  mPolicyToDisplayEvents.toListOfDisplayableSmall(it)
                     if (it.isNotEmpty()) //post the most important of them in big screen
@@ -63,8 +63,8 @@ class MainFeatureVM : ViewModel()
     fun onClickOnSmallEvent(inPositionInList:Int)
         {
         // display in big setting the event clicked
-        mHottestEvents?.let {
-            if(inPositionInList < mHottestEvents!!.size)
+        mListOfEventsOfInterest?.let {
+            if(inPositionInList < mListOfEventsOfInterest!!.size)
                 {
                 //click on actual event: display it in the detailed setting
                 getBigDisplayableChannelAsMutable().value = mPolicyToDisplayEvents.toDisplayableBig(it[inPositionInList])
@@ -74,7 +74,28 @@ class MainFeatureVM : ViewModel()
                 // click on "more" pseudo event
                 //goto exhaustive list
                 }
+            }
+        }
 
+    fun onClickOnSearchButton(inSearchedPattern: String)
+        {
+        getWaiterDisplayChannelAsMutable().value= true//display waiting animation
+        viewModelScope.launch {
+            //in background, let's fetch the events in order to display them
+            val vResult = DataModuleAccess.getUsecaseForEventsBySearchedPattern().execute(inSearchedPattern)
+            getWaiterDisplayChannelAsMutable().value= false //hide waiting animation
+            if(vResult.isSuccessful())
+                {
+                // we successfully fetched events, we will display them in a small setting, and the most important in a big one
+                mListOfEventsOfInterest = vResult.data?.also {
+                    // post the list of events in disp. form
+                    getListOfSmallDisplayableChannelAsMutable().value =  mPolicyToDisplayEvents.toListOfDisplayableSmall(it)
+                    if (it.isNotEmpty()) //post the most important of them in big screen
+                        getBigDisplayableChannelAsMutable().value =  mPolicyToDisplayEvents.toDisplayableBig(it[0])
+                    }
+                }
+            else
+                getPoppingErrorSignalChannelAsMutable().value = UiEvent(mPolicyToDisplayErrors.toDisplayableError(vResult.error))
             }
         }
 

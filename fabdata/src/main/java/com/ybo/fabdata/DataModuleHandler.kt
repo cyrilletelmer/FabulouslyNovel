@@ -8,6 +8,7 @@ import com.ybo.fabdata.api.ExceptionPolicyForAPI
 import com.ybo.fabdata.model.EntityEvent
 import com.ybo.fabdata.model.EntityEventFactory
 import com.ybo.fabdata.usecases.GettingHottestEventsToCome
+import com.ybo.fabdata.usecases.GettingSearchedEvents
 
 /** Entry point for the DATA part of the app. Client of this module use this object to obtain the data they are interested in*/
 class DataModuleHandler
@@ -36,13 +37,22 @@ class DataModuleHandler
         elementaryApiCalls = inElementaryAPI
         }
 
-    /** gets object able to request most popular events */
+    /** object (usecase) able to request most popular events */
     fun getMostPopularEvents():GettingHottestEventsToCome
         {
         return GettingHottestEventsToCome (
             eventFactory,
             ApiSeat(connectionStrengthAware,exceptionPolicy, elementaryApiCalls)
-        )
+            )
+        }
+
+    /** object (usecase) able to request events from a searched pattern */
+    fun getEventsFromSearchedPattern( ):GettingSearchedEvents
+        {
+        return GettingSearchedEvents (
+            eventFactory,
+            ApiSeat(connectionStrengthAware,exceptionPolicy, elementaryApiCalls)
+            )
         }
 
 
