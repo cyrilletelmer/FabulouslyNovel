@@ -31,7 +31,7 @@ class RetrofitBasedElementaryApiCalls : ElementaryApiCalls
             {
 
             return ApiClientRetrofit.apiService.events(inPage,inCategory,inSortingRule, ApiClientRetrofit.CLIENT_ID).also {
-                DataModuleHandler.logger.log("APIRETROFIT","requesting events result is ${it.errorBody()?.string()} ")
+                DataModuleHandler.logger.log("APIRETROFIT","requesting events result is ${it.errorBody()?.string()} body ${it.body()}")
             }.body()?.events ?: throw Exception("hum")
             }
 
