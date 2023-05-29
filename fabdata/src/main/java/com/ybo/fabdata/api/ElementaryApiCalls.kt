@@ -9,7 +9,6 @@ interface ElementaryApiCalls
     /** gets events  or throw*/
     suspend fun eventsOrThrow
         (
-
         inPageSize:Int?,
         inCategory: String?,
         inSortingRule: String?,

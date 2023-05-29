@@ -59,9 +59,9 @@ class ApiSeat
 
 
     /** result of an api call, even if failed */
-    open class ApiResult<T>(val error:DataError.Error, val result : T? )
+    open class ApiResult<T>(val error:DataError.Error, val data : T? )
         {
-        override fun toString() :String { return "<error: $error, res $result >"}
+        override fun toString() :String { return "<error: $error, res $data >"}
         }
 
 

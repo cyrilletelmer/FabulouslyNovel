@@ -16,7 +16,7 @@ class GettingHottestEventsToCome (val eventFactory: EntityEvent.Factory, val api
         val vSortingRule : ApiSeat.SortingRule = ApiSeat.SortingRule(ApiSeat.SortingAttributeForEvents.SCORE,false,null)
         val vResult = api.getEvents(null,ApiSeat.EventCategory.ALL,vSortingRule)
         //we have the result of the Api call, we will turn it into its Entity counterpart (ApiModelEvents to EntityEvents)
-        return DataModuleHandler.DataResult(vResult.error, vResult.result?.let { inListOfApiEvents ->
+        return DataModuleHandler.DataResult(vResult.error, vResult.data?.let { inListOfApiEvents ->
             inListOfApiEvents.map {eventFactory.create(it) }
         }).also {
             DataModuleHandler.logger.log("GETTING_HOTTEST_EVENTS_USECASE","returning hottest events $it")
